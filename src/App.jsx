@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react"
-import Map from './components/Map.jsx'
 import './App.css'
+import MapComp from "./components/MapComp"
 
 const App = () => {
 
     //set state vars
     const [ipDetails, setIpDetails] = useState({})
-    const [lat, setLat] = useState(12)
+    const [lat, setLat] = useState(45)
     const [lon, setLon] = useState(12)
 
     //fetch API once when the component is mounted
@@ -16,8 +16,9 @@ const App = () => {
                 const response = await fetch("https://ipapi.co/json")
                 if (response.ok) {
                     const data = await response.json()
-                    console.log(data);
                     setIpDetails(data)
+                    setLat(data.latitude)
+                    setLon(data.longitude)
                 } else {
                     throw new Error("Failed to fetch data")
                 }
@@ -40,13 +41,14 @@ const App = () => {
                     <h4>Internet Service Provider(ISP):</h4>
                     <p>{ipDetails.org}</p>
                 </div>
+                <div>
+                    <MapComp
+                        lon={lon}
+                        lat={lat}
+                    />
+                </div>
             </div>
-            <div>
-                <Map
-                    lat={lat}
-                    lon={lon}
-                />
-            </div>
+
         </>
     )
 }
